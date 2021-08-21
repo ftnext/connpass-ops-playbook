@@ -15,8 +15,10 @@ def login(username, password):
     wait_until(Text("あなたのイベント").exists)
 
 
-def copy_existing_event(url):
+def copy_existing_event(url, human_confirms=False):
     """指定したイベントをコピーする
+
+    コピーの確認ダイアログを出した状態で止めたければ human_confirms=True を指定する。
 
     connpassの仕様上、管理者のイベントのみコピーできる
 
@@ -25,6 +27,7 @@ def copy_existing_event(url):
     """
     go_to(url)
     click("コピーを作成")
-    Alert().accept()
+    if not human_confirms:
+        Alert().accept()
 
-    wait_until(Text("下書き中").exists)
+        wait_until(Text("下書き中").exists)
