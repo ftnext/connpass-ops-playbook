@@ -25,20 +25,32 @@ class LoginTestCase(TestCase):
         wait_until.assert_called_once_with(Text.return_value.exists)
 
 
+@patch("connpass_ops_playbook.plays.wait_until")
+@patch("connpass_ops_playbook.plays.Text")
+@patch("connpass_ops_playbook.plays.Alert")
+@patch("connpass_ops_playbook.plays.click")
+@patch("connpass_ops_playbook.plays.go_to")
 class CopyExistingEventTestCase(TestCase):
-    @patch("connpass_ops_playbook.plays.wait_until")
-    @patch("connpass_ops_playbook.plays.Text")
-    @patch("connpass_ops_playbook.plays.Alert")
-    @patch("connpass_ops_playbook.plays.click")
-    @patch("connpass_ops_playbook.plays.go_to")
+    def setUp(self):
+        self.url = "https://awesome-group.connpass.com/event/1234567/"
+
     def test_copy(self, go_to, click, Alert, Text, wait_until):
-        url = "https://awesome-group.connpass.com/event/1234567/"
+        plays.copy_existing_event(self.url)
 
-        plays.copy_existing_event(url)
-
-        go_to.assert_called_once_with(url)
+        go_to.assert_called_once_with(self.url)
         click.assert_called_once_with("コピーを作成")
         Alert.assert_called_once_with()
         Alert.return_value.accept.assert_called_once_with()
         Text.assert_called_once_with("下書き中")
         wait_until.assert_called_once_with(Text.return_value.exists)
+
+    def test_human_confirm_is_true(
+        self, go_to, click, Alert, Text, wait_until
+    ):
+        plays.copy_existing_event(self.url, human_confirms=True)
+
+        go_to.assert_called_once_with(self.url)
+        click.assert_called_once_with("コピーを作成")
+        Alert.assert_not_called()
+        Text.assert_not_called()
+        wait_until.assert_not_called()
