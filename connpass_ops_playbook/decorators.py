@@ -1,6 +1,6 @@
 from functools import wraps
 
-from helium import start_firefox
+from helium import start_chrome, start_firefox
 
 from connpass_ops_playbook.playbooks import login_with_env
 
@@ -19,6 +19,10 @@ def using_firefox(func):
         func(*args, **kwargs)
 
     return wrapper
+
+
+def using_chrome(func):
+    raise NotImplementedError
 
 
 def logged_in(func):

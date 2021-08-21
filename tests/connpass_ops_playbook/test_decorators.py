@@ -16,6 +16,18 @@ class UsingFirefoxTestCase(TestCase):
         start_firefox.assert_called_once_with()
 
 
+class UsingChromeTestCase(TestCase):
+    @patch("connpass_ops_playbook.decorators.start_chrome")
+    def test_start_chrome(self, start_chrome):
+        @d.using_chrome
+        def f():
+            ...
+
+        f()
+
+        start_chrome.assert_called_once_with()
+
+
 class LoggedInTestCase(TestCase):
     @patch("connpass_ops_playbook.decorators.login_with_env")
     def test_logged_in(self, login_with_env):
