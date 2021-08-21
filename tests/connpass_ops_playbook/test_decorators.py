@@ -14,3 +14,15 @@ class UsingFirefoxTestCase(TestCase):
         f()
 
         start_firefox.assert_called_once_with()
+
+
+class LoggedInTestCase(TestCase):
+    @patch("connpass_ops_playbook.decorators.login_with_env")
+    def test_logged_in(self, login_with_env):
+        @d.logged_in
+        def f():
+            ...
+
+        f()
+
+        login_with_env.assert_called_once_with()
