@@ -13,3 +13,7 @@ def login(username, password):
     click("ログインする")
 
     wait_until(Text("あなたのイベント").exists)
+
+
+def copy_existing_event(url):
+    raise NotImplementedError
