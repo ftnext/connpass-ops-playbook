@@ -1,4 +1,4 @@
-from helium import Text, click, go_to, wait_until, write
+from helium import Alert, Text, click, go_to, wait_until, write
 
 
 def login(username, password):
@@ -16,4 +16,15 @@ def login(username, password):
 
 
 def copy_existing_event(url):
-    raise NotImplementedError
+    """指定したイベントをコピーする
+
+    connpassの仕様上、管理者のイベントのみコピーできる
+
+    画面参考（コピーを作成）
+    https://help.connpass.com/organizers/event-detail.html#id32
+    """
+    go_to(url)
+    click("コピーを作成")
+    Alert().accept()
+
+    wait_until(Text("下書き中").exists)
