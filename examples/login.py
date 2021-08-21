@@ -4,6 +4,8 @@ from connpass_ops_playbook.decorators import using_firefox
 from connpass_ops_playbook.playbooks import login_with_env
 from helium import kill_browser
 
+# Chromeを使いたい場合は using_chrome に変える
+# from connpass_ops_playbook.decorators import using_chrome
 login_with_env = using_firefox(login_with_env)
 
 
