@@ -1,5 +1,6 @@
 from functools import wraps
 
+import chromedriver_autoinstaller
 from helium import start_chrome, start_firefox
 
 from connpass_ops_playbook.playbooks import login_with_env
@@ -24,16 +25,14 @@ def using_firefox(func):
 def using_chrome(func):
     """Google Chromeを使うことを示すデコレータ
 
-    Chromeを空のページで立ち上げる。
-    FIXME Heliumが固定しているSelenium (3.141.0) は Chrome version 89 のみサポートなので、
-    Chromeのバージョンが違うために起動しないケースがある
-    ref: https://github.com/mherrmann/selenium-python-helium/issues/61
+    Chromeを空のページで立ち上げる
 
     注意：他のデコレータと一緒に使う場合、一番外側に置く必要がある（まずブラウザを立ち上げるため）
     """
 
     @wraps(func)
     def wrapper(*args, **kwargs):
+        chromedriver_autoinstaller.install()
         start_chrome()
         func(*args, **kwargs)
 
