@@ -36,4 +36,14 @@ def copy_existing_event(url, human_confirms=False):
 
 
 def download_participants_csv(url, csv_path):
-    raise NotImplementedError
+    """管理権限のあるイベントから参加一覧CSVをダウンロードする
+
+    CSVダウンロードが終わるまで待機する。
+
+    画面参考
+    https://help.connpass.com/organizers/event-admin.html#organizers-event-admin-participant-management
+    """
+    go_to(url)
+    click("CSVダウンロード")
+
+    wait_until(Path(csv_path).exists())
