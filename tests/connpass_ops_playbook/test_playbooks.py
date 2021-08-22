@@ -44,10 +44,10 @@ class LoginWithEnvTestCase(TestCase):
         login.assert_not_called()
 
 
+@patch("connpass_ops_playbook.playbooks.download_participants_csv")
+@patch("connpass_ops_playbook.playbooks.search_event_id")
 class DownloadLatestParticipantsCsvTestCase(TestCase):
-    @patch("connpass_ops_playbook.playbooks.download_participants_csv")
-    @patch("connpass_ops_playbook.playbooks.search_event_id")
-    def test_download(self, search_event_id, download_participants_csv):
+    def test_valid_url(self, search_event_id, download_participants_csv):
         url = "https://awesome-group.connpass.com/event/1234567/"
         search_event_id.return_value = 1234567
 
@@ -62,3 +62,20 @@ class DownloadLatestParticipantsCsvTestCase(TestCase):
         download_participants_csv.assert_called_once_with(
             participants_management_url, csv_path
         )
+
+    def test_raise_error_when_invalid_url(
+        self, search_event_id, download_participants_csv
+    ):
+        url = "https://connpass.com/login"
+        search_event_id.return_value = None
+
+        with self.assertRaises(ValueError) as cm:
+            playbooks.download_latest_participants_csv(url)
+
+        self.assertEqual(
+            str(cm.exception),
+            "Specified URL does not include event id: "
+            "https://connpass.com/login",
+        )
+        search_event_id.assert_called_once_with(url)
+        download_participants_csv.assert_not_called()
