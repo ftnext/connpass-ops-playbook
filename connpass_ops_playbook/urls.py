@@ -9,4 +9,6 @@ def to_participants_management_url(event_url):
 
 
 def search_event_id(event_url):
-    raise NotImplementedError
+    parsed = urlparse(event_url)
+    m = re.search(r"\d+", parsed.path)
+    return int(m[0])
