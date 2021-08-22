@@ -37,3 +37,10 @@ class SearchEventId(TestCase):
         actual = urls.search_event_id(event_url)
 
         self.assertEqual(actual, expected)
+
+    def test_numbers_not_included(self):
+        event_url = "https://connpass.com/login"
+
+        actual = urls.search_event_id(event_url)
+
+        self.assertIsNone(actual)
