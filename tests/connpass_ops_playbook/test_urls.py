@@ -11,3 +11,11 @@ class ToParticipantsManagementUrlTestCase(TestCase):
         actual = urls.to_participants_management_url(event_url)
 
         self.assertEqual(actual, expected)
+
+    def test_group_includes_numbers(self):
+        event_url = "https://event2019.connpass.com/event/2345678/"
+        expected = "https://connpass.com/event/2345678/participants/"
+
+        actual = urls.to_participants_management_url(event_url)
+
+        self.assertEqual(actual, expected)
