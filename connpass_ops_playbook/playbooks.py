@@ -14,6 +14,9 @@ def login_with_env():
 
 def download_latest_participants_csv(url):
     event_id = search_event_id(url)
+    if not event_id:
+        raise ValueError(f"Specified URL does not include event id: {url}")
+
     participants_management_url = (
         f"https://connpass.com/event/{event_id}/participants/"
     )
