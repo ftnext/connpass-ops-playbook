@@ -13,4 +13,9 @@ def login_with_env():
 
 
 def download_latest_participants_csv(url):
-    raise NotImplementedError
+    event_id = search_event_id(url)
+    participants_management_url = (
+        f"https://connpass.com/event/{event_id}/participants/"
+    )
+    csv_path = f"event_{event_id}_participants.csv"
+    download_participants_csv(participants_management_url, csv_path)
