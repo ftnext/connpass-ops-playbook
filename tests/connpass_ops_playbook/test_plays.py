@@ -70,7 +70,4 @@ class DownloadParticipantsCsvTestCase(TestCase):
         go_to.assert_called_once_with(url)
         click.assert_called_once_with("CSVダウンロード")
         Path.assert_called_once_with(csv_path)
-        Path.return_value.exists.assert_called_once_with()
-        wait_until.assert_called_once_with(
-            Path.return_value.exists.return_value
-        )
+        wait_until.assert_called_once_with(Path.return_value.exists)

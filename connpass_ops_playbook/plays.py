@@ -46,4 +46,4 @@ def download_participants_csv(url, csv_path):
     go_to(url)
     click("CSVダウンロード")
 
-    wait_until(Path(csv_path).exists())
+    wait_until(Path(csv_path).exists)
