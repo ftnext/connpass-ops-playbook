@@ -42,3 +42,23 @@ class LoginWithEnvTestCase(TestCase):
             [call("CONNPASS_USERNAME"), call("CONNPASS_PASSWORD")]
         )
         login.assert_not_called()
+
+
+class DownloadLatestParticipantsCsvTestCase(TestCase):
+    @patch("connpass_ops_playbook.playbooks.download_participants_csv")
+    @patch("connpass_ops_playbook.playbooks.search_event_id")
+    def test_download(self, search_event_id, download_participants_csv):
+        url = "https://awesome-group.connpass.com/event/1234567/"
+        search_event_id.return_value = 1234567
+
+        participants_management_url = (
+            "https://connpass.com/event/1234567/participants/"
+        )
+        csv_path = "event_1234567_participants.csv"
+
+        playbooks.download_latest_participants_csv(url)
+
+        search_event_id.assert_called_once_with(url)
+        download_participants_csv.assert_called_once_with(
+            participants_management_url, csv_path
+        )
