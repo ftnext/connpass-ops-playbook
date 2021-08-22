@@ -45,11 +45,16 @@ class LoginWithEnvTestCase(TestCase):
 
 
 @patch("connpass_ops_playbook.playbooks.download_participants_csv")
+@patch("connpass_ops_playbook.playbooks.send2trash")
+@patch("connpass_ops_playbook.playbooks.Path")
 @patch("connpass_ops_playbook.playbooks.search_event_id")
 class DownloadLatestParticipantsCsvTestCase(TestCase):
-    def test_valid_url(self, search_event_id, download_participants_csv):
+    def test_valid_url(
+        self, search_event_id, Path, send2trash, download_participants_csv
+    ):
         url = "https://awesome-group.connpass.com/event/1234567/"
         search_event_id.return_value = 1234567
+        Path.return_value.exists.return_value = False
 
         participants_management_url = (
             "https://connpass.com/event/1234567/participants/"
@@ -59,12 +64,15 @@ class DownloadLatestParticipantsCsvTestCase(TestCase):
         playbooks.download_latest_participants_csv(url)
 
         search_event_id.assert_called_once_with(url)
+        Path.assert_called_once_with(csv_path)
+        Path.return_value.exists.assert_called_once_with()
+        send2trash.assert_not_called()
         download_participants_csv.assert_called_once_with(
             participants_management_url, csv_path
         )
 
     def test_raise_error_when_invalid_url(
-        self, search_event_id, download_participants_csv
+        self, search_event_id, Path, send2trash, download_participants_csv
     ):
         url = "https://connpass.com/login"
         search_event_id.return_value = None
@@ -78,4 +86,6 @@ class DownloadLatestParticipantsCsvTestCase(TestCase):
             "https://connpass.com/login",
         )
         search_event_id.assert_called_once_with(url)
+        Path.assert_not_called()
+        send2trash.assert_not_called()
         download_participants_csv.assert_not_called()
