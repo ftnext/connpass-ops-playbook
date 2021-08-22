@@ -49,26 +49,43 @@ class LoginWithEnvTestCase(TestCase):
 @patch("connpass_ops_playbook.playbooks.Path")
 @patch("connpass_ops_playbook.playbooks.search_event_id")
 class DownloadLatestParticipantsCsvTestCase(TestCase):
+    def setUp(self):
+        self.url = "https://awesome-group.connpass.com/event/1234567/"
+        self.participants_management_url = (
+            "https://connpass.com/event/1234567/participants/"
+        )
+        self.csv_path = "event_1234567_participants.csv"
+
     def test_valid_url(
         self, search_event_id, Path, send2trash, download_participants_csv
     ):
-        url = "https://awesome-group.connpass.com/event/1234567/"
         search_event_id.return_value = 1234567
         Path.return_value.exists.return_value = False
 
-        participants_management_url = (
-            "https://connpass.com/event/1234567/participants/"
-        )
-        csv_path = "event_1234567_participants.csv"
+        playbooks.download_latest_participants_csv(self.url)
 
-        playbooks.download_latest_participants_csv(url)
-
-        search_event_id.assert_called_once_with(url)
-        Path.assert_called_once_with(csv_path)
+        search_event_id.assert_called_once_with(self.url)
+        Path.assert_called_once_with(self.csv_path)
         Path.return_value.exists.assert_called_once_with()
         send2trash.assert_not_called()
         download_participants_csv.assert_called_once_with(
-            participants_management_url, csv_path
+            self.participants_management_url, self.csv_path
+        )
+
+    def test_existing_csv_file_send_to_trash(
+        self, search_event_id, Path, send2trash, download_participants_csv
+    ):
+        search_event_id.return_value = 1234567
+        Path.return_value.exists.return_value = True
+
+        playbooks.download_latest_participants_csv(self.url)
+
+        search_event_id.assert_called_once_with(self.url)
+        Path.assert_called_once_with(self.csv_path)
+        Path.return_value.exists.assert_called_once_with()
+        send2trash.assert_called_once_with(self.csv_path)
+        download_participants_csv.assert_called_once_with(
+            self.participants_management_url, self.csv_path
         )
 
     def test_raise_error_when_invalid_url(
