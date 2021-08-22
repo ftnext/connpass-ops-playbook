@@ -11,5 +11,7 @@ setup(
         "chromedriver-autoinstaller",
         "Send2Trash",
     ],
-    extras_require={"dev": ["black", "flake8", "pytest", "pytest-randomly"]},
+    extras_require={
+        "dev": ["black", "flake8", "isort", "pytest", "pytest-randomly"]
+    },
 )
