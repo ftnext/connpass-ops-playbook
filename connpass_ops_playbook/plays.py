@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from helium import Alert, Text, click, go_to, wait_until, write
 
 
@@ -31,3 +33,7 @@ def copy_existing_event(url, human_confirms=False):
         Alert().accept()
 
         wait_until(Text("下書き中").exists)
+
+
+def download_participants_csv(url, csv_path):
+    raise NotImplementedError

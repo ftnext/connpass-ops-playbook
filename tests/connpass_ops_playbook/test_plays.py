@@ -54,3 +54,23 @@ class CopyExistingEventTestCase(TestCase):
         Alert.assert_not_called()
         Text.assert_not_called()
         wait_until.assert_not_called()
+
+
+class DownloadParticipantsCsvTestCase(TestCase):
+    @patch("connpass_ops_playbook.plays.wait_until")
+    @patch("connpass_ops_playbook.plays.Path")
+    @patch("connpass_ops_playbook.plays.click")
+    @patch("connpass_ops_playbook.plays.go_to")
+    def test_download(self, go_to, click, Path, wait_until):
+        url = "https://connpass.com/event/1234567/participants/"
+        csv_path = "event_1234567_participants.csv"
+
+        plays.download_participants_csv(url, csv_path)
+
+        go_to.assert_called_once_with(url)
+        click.assert_called_once_with("CSVダウンロード")
+        Path.assert_called_once_with(csv_path)
+        Path.return_value.exists.assert_called_once_with()
+        wait_until.assert_called_once_with(
+            Path.return_value.exists.return_value
+        )
