@@ -1,2 +1,8 @@
+import re
+from urllib.parse import urlparse
+
+
 def to_participants_management_url(event_url):
-    raise NotImplementedError
+    parsed = urlparse(event_url)
+    m = re.search(r"\d+", parsed.path)
+    return f"https://connpass.com/event/{m[0]}/participants/"

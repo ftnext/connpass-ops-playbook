@@ -4,7 +4,7 @@ from connpass_ops_playbook import urls
 
 
 class ToParticipantsManagementUrlTestCase(TestCase):
-    def test_from_event_url(self):
+    def test_normal_event_url(self):
         event_url = "https://awesome-group.connpass.com/event/1234567/"
         expected = "https://connpass.com/event/1234567/participants/"
 
