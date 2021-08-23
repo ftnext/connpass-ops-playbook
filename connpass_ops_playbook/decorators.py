@@ -6,13 +6,15 @@ from helium import start_chrome, start_firefox
 from connpass_ops_playbook.playbooks import login_with_env
 
 
-def using_firefox(func):
+def using_firefox(func=None):
     """Firefoxを使うことを示すデコレータ
 
     Firefoxを空のページで立ち上げる
 
     注意：他のデコレータと一緒に使う場合、一番外側に置く必要がある（まずブラウザを立ち上げるため）
     """
+    if func is None:
+        return using_firefox
 
     @wraps(func)
     def wrapper(*args, **kwargs):
