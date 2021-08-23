@@ -4,10 +4,19 @@ from unittest.mock import patch
 from connpass_ops_playbook import decorators as d
 
 
+@patch("connpass_ops_playbook.decorators.start_firefox")
 class UsingFirefoxTestCase(TestCase):
-    @patch("connpass_ops_playbook.decorators.start_firefox")
-    def test_start_firefox(self, start_firefox):
+    def test_without_parenthesis(self, start_firefox):
         @d.using_firefox
+        def f():
+            ...
+
+        f()
+
+        start_firefox.assert_called_once_with()
+
+    def test_with_parenthesis(self, start_firefox):
+        @d.using_firefox()
         def f():
             ...
 
