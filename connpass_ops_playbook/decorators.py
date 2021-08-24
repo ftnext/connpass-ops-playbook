@@ -2,32 +2,30 @@ from functools import wraps
 
 import chromedriver_autoinstaller
 from helium import start_chrome, start_firefox
-from selenium.webdriver import FirefoxOptions
 
 from connpass_ops_playbook.playbooks import login_with_env
 
 
-def using_firefox(options_or_func=None):
+def using_firefox(func=None, /, *, options=None):
     """Firefoxを使うことを示すデコレータ
 
     Firefoxを空のページで立ち上げる
 
     注意：他のデコレータと一緒に使う場合、一番外側に置く必要がある（まずブラウザを立ち上げるため）
     """
-    if options_or_func is None:
-        return using_firefox
-    if isinstance(options_or_func, FirefoxOptions):
-        options = options_or_func
-        return using_firefox_with_options(options)
 
-    func = options_or_func
+    def middle(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            start_firefox(options=options)
+            func(*args, **kwargs)
 
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        start_firefox()
-        func(*args, **kwargs)
+        return wrapper
 
-    return wrapper
+    if func is None:
+        return middle
+
+    return middle(func)
 
 
 def using_firefox_with_options(options):
