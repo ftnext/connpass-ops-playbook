@@ -4,10 +4,7 @@ import argparse
 import os
 from pathlib import Path
 
-from connpass_ops_playbook.decorators import (
-    logged_in,
-    using_firefox_with_options,
-)
+from connpass_ops_playbook.decorators import logged_in, using_firefox
 from connpass_ops_playbook.playbooks import download_latest_participants_csv
 from helium import kill_browser
 from selenium.webdriver import FirefoxOptions
@@ -19,7 +16,7 @@ options.set_preference("browser.download.dir", os.getcwd())
 options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/csv")
 
 
-@using_firefox_with_options(options)
+@using_firefox(options=options)
 @logged_in
 def download(url):
     download_latest_participants_csv(url)
