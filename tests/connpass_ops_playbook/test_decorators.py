@@ -1,5 +1,5 @@
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from connpass_ops_playbook import decorators as d
 
@@ -23,6 +23,19 @@ class UsingFirefoxTestCase(TestCase):
         f()
 
         start_firefox.assert_called_once_with()
+
+    def test_with_options(self, start_firefox):
+        from selenium.webdriver import FirefoxOptions
+
+        options = MagicMock(spec=FirefoxOptions)
+
+        @d.using_firefox(options)
+        def f():
+            ...
+
+        f()
+
+        start_firefox.assert_called_once_with(options=options)
 
 
 class UsingChromeTestCase(TestCase):
