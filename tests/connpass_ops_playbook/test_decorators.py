@@ -13,7 +13,7 @@ class UsingFirefoxTestCase(TestCase):
 
         f()
 
-        start_firefox.assert_called_once_with()
+        start_firefox.assert_called_once_with(options=None)
 
     def test_with_parenthesis(self, start_firefox):
         @d.using_firefox()
@@ -22,14 +22,14 @@ class UsingFirefoxTestCase(TestCase):
 
         f()
 
-        start_firefox.assert_called_once_with()
+        start_firefox.assert_called_once_with(options=None)
 
     def test_with_options(self, start_firefox):
         from selenium.webdriver import FirefoxOptions
 
         options = MagicMock(spec=FirefoxOptions)
 
-        @d.using_firefox(options)
+        @d.using_firefox(options=options)
         def f():
             ...
 
