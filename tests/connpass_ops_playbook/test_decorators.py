@@ -38,10 +38,12 @@ class UsingFirefoxTestCase(TestCase):
         start_firefox.assert_called_once_with(options=options)
 
 
+@patch("connpass_ops_playbook.decorators.start_chrome")
+@patch("connpass_ops_playbook.decorators.chromedriver_autoinstaller")
 class UsingChromeTestCase(TestCase):
-    @patch("connpass_ops_playbook.decorators.start_chrome")
-    @patch("connpass_ops_playbook.decorators.chromedriver_autoinstaller")
-    def test_start_chrome(self, chromedriver_autoinstaller, start_chrome):
+    def test_without_parenthesis(
+        self, chromedriver_autoinstaller, start_chrome
+    ):
         @d.using_chrome
         def f():
             ...
@@ -49,7 +51,17 @@ class UsingChromeTestCase(TestCase):
         f()
 
         chromedriver_autoinstaller.install.assert_called_once_with()
-        start_chrome.assert_called_once_with()
+        start_chrome.assert_called_once_with(options=None)
+
+    def test_with_parenthesis(self, chromedriver_autoinstaller, start_chrome):
+        @d.using_chrome()
+        def f():
+            ...
+
+        f()
+
+        chromedriver_autoinstaller.install.assert_called_once_with()
+        start_chrome.assert_called_once_with(options=None)
 
 
 class LoggedInTestCase(TestCase):
