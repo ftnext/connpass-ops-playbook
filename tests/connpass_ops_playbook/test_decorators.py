@@ -63,6 +63,20 @@ class UsingChromeTestCase(TestCase):
         chromedriver_autoinstaller.install.assert_called_once_with()
         start_chrome.assert_called_once_with(options=None)
 
+    def test_with_options(self, chromedriver_autoinstaller, start_chrome):
+        from selenium.webdriver import ChromeOptions
+
+        options = MagicMock(spec=ChromeOptions)
+
+        @d.using_chrome(options=options)
+        def f():
+            ...
+
+        f()
+
+        chromedriver_autoinstaller.install.assert_called_once_with()
+        start_chrome.assert_called_once_with(options=options)
+
 
 class LoggedInTestCase(TestCase):
     @patch("connpass_ops_playbook.decorators.login_with_env")
