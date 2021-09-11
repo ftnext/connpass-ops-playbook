@@ -28,7 +28,7 @@ def using_firefox(func=None, /, *, options=None):
     return middle(func)
 
 
-def using_chrome(func):
+def using_chrome(func=None, /, *, options=None):
     """Google Chromeを使うことを示すデコレータ
 
     Chromeを空のページで立ち上げる
@@ -36,13 +36,19 @@ def using_chrome(func):
     注意：他のデコレータと一緒に使う場合、一番外側に置く必要がある（まずブラウザを立ち上げるため）
     """
 
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        chromedriver_autoinstaller.install()
-        start_chrome()
-        func(*args, **kwargs)
+    def middle(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            chromedriver_autoinstaller.install()
+            start_chrome(options=options)
+            func(*args, **kwargs)
 
-    return wrapper
+        return wrapper
+
+    if func is None:
+        return middle
+
+    return middle(func)
 
 
 def logged_in(func):
