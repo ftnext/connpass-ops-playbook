@@ -37,6 +37,15 @@ class UsingFirefoxTestCase(TestCase):
 
         start_firefox.assert_called_once_with(options=options, headless=False)
 
+    def test_headless(self, start_firefox):
+        @d.using_firefox(headless=True)
+        def f():
+            ...
+
+        f()
+
+        start_firefox.assert_called_once_with(options=None, headless=True)
+
 
 @patch("connpass_ops_playbook.decorators.start_chrome")
 @patch("connpass_ops_playbook.decorators.chromedriver_autoinstaller")
