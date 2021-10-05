@@ -1,6 +1,8 @@
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
+from selenium.webdriver import FirefoxOptions
+
 from connpass_ops_playbook import decorators as d
 
 
@@ -25,8 +27,6 @@ class UsingFirefoxTestCase(TestCase):
         start_firefox.assert_called_once_with(options=None, headless=False)
 
     def test_with_options(self, start_firefox):
-        from selenium.webdriver import FirefoxOptions
-
         options = MagicMock(spec=FirefoxOptions)
 
         @d.using_firefox(options=options)
@@ -45,6 +45,17 @@ class UsingFirefoxTestCase(TestCase):
         f()
 
         start_firefox.assert_called_once_with(options=None, headless=True)
+
+    def test_headless_with_options(self, start_firefox):
+        options = MagicMock(spec=FirefoxOptions)
+
+        @d.using_firefox(options=options, headless=True)
+        def f():
+            ...
+
+        f()
+
+        start_firefox.assert_called_once_with(options=options, headless=True)
 
 
 @patch("connpass_ops_playbook.decorators.start_chrome")
