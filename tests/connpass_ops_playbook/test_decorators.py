@@ -13,7 +13,7 @@ class UsingFirefoxTestCase(TestCase):
 
         f()
 
-        start_firefox.assert_called_once_with(options=None)
+        start_firefox.assert_called_once_with(options=None, headless=False)
 
     def test_with_parenthesis(self, start_firefox):
         @d.using_firefox()
@@ -22,7 +22,7 @@ class UsingFirefoxTestCase(TestCase):
 
         f()
 
-        start_firefox.assert_called_once_with(options=None)
+        start_firefox.assert_called_once_with(options=None, headless=False)
 
     def test_with_options(self, start_firefox):
         from selenium.webdriver import FirefoxOptions
@@ -35,7 +35,7 @@ class UsingFirefoxTestCase(TestCase):
 
         f()
 
-        start_firefox.assert_called_once_with(options=options)
+        start_firefox.assert_called_once_with(options=options, headless=False)
 
 
 @patch("connpass_ops_playbook.decorators.start_chrome")
